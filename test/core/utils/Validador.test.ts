@@ -12,25 +12,25 @@ test('Deve retornar erro com texto nulo', () => {
 })
 
 test('Deve retornar null com texto não vazio', () => {
-	const erro = Validador.naoVazia('ABC', 'Texto vazio')
+	const erro = Validador.naoVazio('ABC', 'Texto vazio')
 	expect(erro).toBeNull()
 })
 
 test('Deve retornar erro com texto vazio', () => {
 	const msgErro = 'Texto vazio'
-	const e1 = Validador.naoVazia('      ', msgErro)
+	const e1 = Validador.naoVazio('      ', msgErro)
 	expect(e1).toBe(msgErro)
 })
 
 test('Deve retornar erro com texto null', () => {
 	const msgErro = 'Texto vazio'
-	const e1 = Validador.naoVazia(null, msgErro)
+	const e1 = Validador.naoVazio(null, msgErro)
 	expect(e1).toBe(msgErro)
 })
 
 test('Deve retornar erro com texto undefined', () => {
 	const msgErro = 'Texto vazio'
-	const e1 = Validador.naoVazia(undefined, msgErro)
+	const e1 = Validador.naoVazio(undefined, msgErro)
 	expect(e1).toBe(msgErro)
 })
 
@@ -42,4 +42,24 @@ test('Deve retornar null com texto menor que o tamanho máximo', () => {
 test('Deve retornar erro com texto maior ou igual ao tamanho máximo', () => {
 	const erro = Validador.tamanhoMenorQue('Bom dia', 6, 'erro')
 	expect(erro).toBe('erro')
+})
+
+test('Deve combinar os erros', () => {
+	const erros = Validador.combinar(
+		Validador.naoVazio('', 'Erro 1'),
+		Validador.naoVazio('', 'Erro 2'),
+		Validador.naoVazio('', 'Erro 3'),
+		Validador.naoVazio('Teste', 'nao erro 4'),
+		Validador.naoVazio('', 'Erro 5')
+	)
+	expect(erros?.join(', ')).toBe('Erro 1, Erro 2, Erro 3, Erro 5')
+})
+
+test('Deve combinar sem erros', () => {
+	const erros = Validador.combinar(
+		Validador.naoVazio('Bom dia', 'Erro 1'),
+		Validador.naoVazio('Boa tarde', 'Erro 2'),
+		Validador.naoVazio('Boa noite', 'Erro 3')
+	)
+	expect(erros).toBeNull()
 })
